@@ -30,12 +30,21 @@ var swaggerDefinition = {
   basePath: '/', // Base path (optional)
 };
 
+// jsDocFilter has only one parameter - jsComment
+// jsComment contains the actual route jsDocumentation
+var jsDocFilter = function(jsComment) {
+  // Do anything here below just to filter out comments
+  // as long as the function returns boolean
+  return typeof jsComment !== 'undefined';
+};
+
 // Options for the swagger docs
 var options = {
   // Import swaggerDefinitions
   swaggerDefinition: swaggerDefinition,
   // Path to the API docs
   apis: ['./example/routes*.js', './example/parameters.yaml'],
+  jsDocFilter: jsDocFilter,
 };
 
 // Initialize swagger-jsdoc -> returns validated swagger spec in json format
