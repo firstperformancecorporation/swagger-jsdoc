@@ -1,0 +1,53 @@
+# Documentation: https://bit.ly/2Hdw5U7
+
+image:
+  name: 196266734325.dkr.ecr.us-east-1.amazonaws.com/node-carbon-jessie-with-oracle-dependencies:latest
+  aws:
+    access-key: $AWS_ACCESS_KEY_ID
+    secret-key: $AWS_SECRET_ACCESS_KEY
+
+definitions:
+  steps:
+    - step: &dep-audit
+        name: Dependency Audit
+        script:
+          - npm audit
+    - step: &dep-install
+        name: Dependency Install
+        script:
+          - npm ci
+        artifacts:
+          - node_modules/**
+    - step: &test-run
+        name: Test Run
+        script:
+          - npm run test
+    - step: &send-to-aws
+        name: Sent to AWS
+        script:
+          - git archive --remote=ssh://bitbucket.org/firstperformance/server-laboratory.git HEAD misc-scripts/bb2s3.sh | tar -x
+          - chmod +x misc-scripts/bb2s3.sh
+          - misc-scripts/bb2s3.sh
+
+pipelines:
+  custom:
+    check-dependencies:
+      - step: *dep-audit
+    send-to-aws:
+      - step: *send-to-aws
+  branches:
+    core/*:
+      - step: *dep-audit
+      - step: *dep-install
+      - step: *test-run
+      - step: *send-to-aws
+    dev/*:
+      - step: *dep-audit
+      - step: *send-to-aws
+    qa/*:
+      - step: *dep-audit
+      - step: *send-to-aws
+    prod/*:
+      - step: *dep-audit
+      - step: *send-to-aws
+
