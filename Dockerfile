@@ -1,6 +1,7 @@
 FROM 739760443361.dkr.ecr.us-east-1.amazonaws.com/fp-docker-component-base:latest
 ENV SRC_CODE="./"
 ENV APP_DIR="/var/app/current/"
+RUN unattended-upgrade -d
 
 COPY ${SRC_CODE} ${APP_DIR}
 
