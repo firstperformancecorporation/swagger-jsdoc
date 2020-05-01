@@ -1,6 +1,6 @@
 {
   "name": "swagger-jsdoc",
-  "version": "5.8.9",
+  "version": "5.8.10",
   "description": "Generates swagger doc based on JSDoc",
   "main": "index.js",
   "scripts": {
